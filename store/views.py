@@ -13,6 +13,8 @@ from rest_framework.decorators import action
 
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework.response import Response
 
 # Create your views here.
@@ -46,5 +48,9 @@ class VehicleCategoryViewSet(ModelViewSet):
 class VehicleViewSet(ModelViewSet):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category_id']
+
 
     

@@ -26,15 +26,17 @@ class VehicleCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
-    # list_display = ['id', 'name', 'category', 'type', 'image']
-    list_display = ['id', 'name', 'category', 'type', 'thumbnail']
+    # list_display = ['id', 'name', 'category', 'image']
+    list_display = ['id', 'name', 'category', 'thumbnail']
     # readonly_fields = ['thumbnail']
 
     def thumbnail(self, instance):
         if instance.image.name != '':
             # print(instance.image.url)
             # sys.exit()
-            return format_html(f'<img src= "{instance.image.url}" class="thumbnail"/>')
+            return format_html(f'<img class="thumbnail" src= "{instance.image.url}" class="thumbnail"/>')
         return ''
-
-    
+    class Media:
+        css = {
+            'all': ['store/style.css']
+        }

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from datetime import timedelta
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,8 +28,10 @@ SECRET_KEY = 'django-insecure-a&#=bjbj=24y&^p7p3hj6$qi8m#a(&6(c+2u3$j^=-b)&_4o=5
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    '127.0.0.2'
+    "127.0.0.1",
+    "127.0.0.2",
+    "192.168.1.77",
+    "192.168.1.85",
 ]
 
 
@@ -41,14 +44,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
+    'djoser',
+    'django_filters',
     'core',
     'store',
-    'djoser',
     
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,7 +69,8 @@ ROOT_URLCONF = 'mechanic_api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # 'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Add this line to include the templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,6 +141,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -142,6 +153,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'core.User'
+
+
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://192.168.1.77:8000",
+    "http://192.168.1.85:8000",
+]
+
+# CORS_ALLOW_ALL_ORIGINS: True
 
 
 
@@ -162,4 +189,8 @@ DJOSER = {
     'SERIALIZERS': {
         'current_user': 'core.serializers.UserSerializer',
     },
+
+    'SEND_ACTIVATION_SMS': True,
+    'ACTIVATION_SMS_TEMPLATE': 'activation_sms.txt',  # Customize the SMS template as per your needs
+
 }
