@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .models import Vehicle, VehicleCategory, VehiclePart
-from .serializers import CustomerSerializer, VehicleCategorySerializer, VehiclePartSerializer, VehicleSerializer
+from .models import Mechanic, Vehicle, VehicleCategory, VehiclePart
+from .serializers import CustomerSerializer, MechanicSerializer, VehicleCategorySerializer, VehiclePartSerializer, VehicleSerializer
 
 
 from store.models import Customer
@@ -14,6 +14,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import  SearchFilter
 
 from rest_framework.response import Response
 
@@ -34,6 +35,29 @@ class CustomerViewSet(ModelViewSet):
             return Response(serializer.data)
         elif request.method == 'PUT':
             serializer = CustomerSerializer(customer, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+
+
+
+class MechanicViewSet(ModelViewSet):
+    queryset = Mechanic.objects.select_related('user').all()
+    serializer_class = MechanicSerializer
+
+    # filter_backends = [ DjangoFilterBackend, SearchFilter]
+    filter_backends = [ DjangoFilterBackend]
+    filterset_fields = ['vehicle_speciality', 'vehicle_part_speciality']
+
+    @action(detail=False, methods=['GET', 'PUT', 'PATCH'], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        (mechanic, created) = Mechanic.objects.get_or_create(
+            user_id=request.user.id)
+        if request.method == 'GET':
+            serializer = MechanicSerializer(mechanic)
+            return Response(serializer.data)
+        elif request.method == 'PUT':
+            serializer = MechanicSerializer(mechanic, data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)

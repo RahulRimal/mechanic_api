@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from mechanic_api.settings import BASE_DIR
 
-from .models import Customer, Vehicle, VehicleCategory, VehiclePart
+from .models import Customer, Mechanic, Vehicle, VehicleCategory, VehiclePart
 
 from django.utils.html import format_html
 
@@ -42,9 +42,6 @@ class VehiclePartAdminInline(admin.TabularInline):
             'all': ['store/style.css']
         }
 
-
-
-
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
     # list_display = ['id', 'name', 'category', 'image']
@@ -61,3 +58,12 @@ class VehicleAdmin(admin.ModelAdmin):
         css = {
             'all': ['store/style.css']
         }
+
+
+@admin.register(Mechanic)
+class MechanicAdmin(admin.ModelAdmin):
+    list_display = ['id','user_id', 'phone_number', 'first_name',
+                    'last_name', 'description']
+    autocomplete_fields = ['user']
+    search_fields = ['user__first_name', 'user__last_name']
+    

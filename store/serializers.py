@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from .models import Customer, Vehicle, VehicleCategory, VehiclePart
+from .models import Customer, Mechanic, Vehicle, VehicleCategory, VehiclePart
 
 class CustomerSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -12,7 +12,17 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = [ 'id', 'user_id', 'first_name', 'last_name', 'phone_number',
         
-                  'username', 'email', 'description', 'image', 'created_at']
+                  'username', 'email', 'description', 'image']
+
+
+class MechanicSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    user_id = serializers.IntegerField()
+    # user = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Mechanic
+        fields = [ 'id', 'user_id', 'first_name', 'last_name', 'phone_number', 'username', 'email', 'description', 'image', 'vehicle_speciality', 'vehicle_part_speciality']
 
 
 

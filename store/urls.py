@@ -9,6 +9,7 @@ router = routers.DefaultRouter()
 
 
 router.register('customers', views.CustomerViewSet)
+router.register('mechanics', views.MechanicViewSet)
 router.register('categories', views.VehicleCategoryViewSet)
 router.register('vehicles', views.VehicleViewSet)
 # router.register('vehicles', views.VehicleViewSet)
