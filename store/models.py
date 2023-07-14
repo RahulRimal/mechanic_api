@@ -77,12 +77,15 @@ class VehicleCategory(models.Model):
         return self.name
 
 
+
+
+
 class Vehicle(models.Model):
     
 
     name = models.CharField(max_length=100)
     image = models.ImageField(
-        upload_to='store/images/vehicle', null=True, blank=True)
+        upload_to='store/images/vehicle', null=False, blank=False)
     category = models.ForeignKey(VehicleCategory, on_delete=models.PROTECT)
     
     
@@ -90,3 +93,10 @@ class Vehicle(models.Model):
     def __str__(self):
         return self.name
 
+
+
+class VehiclePart(models.Model):
+    name = models.CharField(max_length=100)
+    image = models.ImageField(
+        upload_to='store/images/vehicle_part', null=False, blank=False)
+    vehicle = models.ForeignKey(Vehicle,on_delete=models.CASCADE)

@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from .models import Customer, Vehicle, VehicleCategory
+from .models import Customer, Vehicle, VehicleCategory, VehiclePart
 
 class CustomerSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -21,6 +21,15 @@ class VehicleCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = VehicleCategory
         fields = ['id', 'name', 'image']
+
+
+class VehiclePartSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = VehiclePart
+        fields = ['id', 'name', 'vehicle', 'image']
+        # fields = ['id', 'name', 'image']
+
 
 
 class VehicleSerializer(serializers.ModelSerializer):

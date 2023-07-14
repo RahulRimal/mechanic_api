@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from mechanic_api.settings import BASE_DIR
 
-from .models import Customer, Vehicle, VehicleCategory
+from .models import Customer, Vehicle, VehicleCategory, VehiclePart
 
 from django.utils.html import format_html
 
@@ -23,17 +23,38 @@ class CustomerAdmin(admin.ModelAdmin):
 @admin.register(VehicleCategory)
 class VehicleCategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
+    
+    
+
+
+class VehiclePartAdminInline(admin.TabularInline):
+    model = VehiclePart
+    extra = 0
+    readonly_fields = ['thumbnail']
+
+    def thumbnail(self, instance):
+        if instance.image.name != '':
+            
+            return format_html(f'<img class="thumbnail" src= "{instance.image.url}" class="thumbnail"/>')
+        return ''
+    class Media:
+        css = {
+            'all': ['store/style.css']
+        }
+
+
+
 
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
     # list_display = ['id', 'name', 'category', 'image']
     list_display = ['id', 'name', 'category', 'thumbnail']
     # readonly_fields = ['thumbnail']
+    inlines = [VehiclePartAdminInline]
 
     def thumbnail(self, instance):
         if instance.image.name != '':
-            # print(instance.image.url)
-            # sys.exit()
+            
             return format_html(f'<img class="thumbnail" src= "{instance.image.url}" class="thumbnail"/>')
         return ''
     class Media:

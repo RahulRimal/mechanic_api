@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .models import Vehicle, VehicleCategory
-from .serializers import CustomerSerializer, VehicleCategorySerializer, VehicleSerializer
+from .models import Vehicle, VehicleCategory, VehiclePart
+from .serializers import CustomerSerializer, VehicleCategorySerializer, VehiclePartSerializer, VehicleSerializer
 
 
 from store.models import Customer
@@ -43,6 +43,14 @@ class CustomerViewSet(ModelViewSet):
 class VehicleCategoryViewSet(ModelViewSet):
     queryset = VehicleCategory.objects.all()
     serializer_class = VehicleCategorySerializer
+
+
+
+class VehiclePartViewSet(ModelViewSet):
+    # queryset = VehiclePart.objects.all()
+    serializer_class = VehiclePartSerializer
+    def get_queryset(self):
+        return VehiclePart.objects.filter(vehicle_id=self.kwargs['vehicle_pk'])
 
 
 class VehicleViewSet(ModelViewSet):
