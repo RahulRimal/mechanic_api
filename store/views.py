@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .models import Mechanic, Vehicle, VehicleCategory, VehiclePart
-from .serializers import CustomerSerializer, MechanicSerializer, VehicleCategorySerializer, VehiclePartSerializer, VehicleSerializer
+from .models import Mechanic, Review, Vehicle, VehicleCategory, VehiclePart, VehicleRepairRequest, VehicleRepairRequestImage
+from .serializers import CustomerSerializer, MechanicSerializer, ReviewSerializer, VehicleCategorySerializer, VehiclePartSerializer, VehicleRepairRequestImageSerializer, VehicleRepairRequestSerializer, VehicleSerializer
 
 
 from store.models import Customer
@@ -86,3 +86,21 @@ class VehicleViewSet(ModelViewSet):
 
 
     
+
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+
+class VehicleRepairRequestViewSet(ModelViewSet):
+    queryset = VehicleRepairRequest.objects.all()
+    serializer_class = VehicleRepairRequestSerializer
+
+
+class VehicleRepairRequestImageViewSet(ModelViewSet):
+    def get_queryset(self):
+        return VehicleRepairRequestImage.objects.filter(repair_request_id=self.kwargs['repair_request_pk'])
+    serializer_class = VehicleRepairRequestImageSerializer
+    def get_serializer_context(self):
+        return {'request_id': self.kwargs['repair_request_pk']}
+

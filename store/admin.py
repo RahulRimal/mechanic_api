@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from mechanic_api.settings import BASE_DIR
 
-from .models import Customer, Mechanic, Vehicle, VehicleCategory, VehiclePart
+from .models import Customer, Mechanic, Vehicle, VehicleCategory, VehiclePart, VehicleRepairRequest, VehicleRepairRequestImage, VehicleRepairRequestVideo
 
 from django.utils.html import format_html
 
@@ -67,3 +67,40 @@ class MechanicAdmin(admin.ModelAdmin):
     autocomplete_fields = ['user']
     search_fields = ['user__first_name', 'user__last_name']
     
+
+
+class VehicleRepairRequestImageAdminInline(admin.TabularInline):
+    model = VehicleRepairRequestImage
+    extra = 0
+    readonly_fields = ['thumbnail']
+
+    def thumbnail(self, instance):
+        if instance.image.name != '':
+            
+            return format_html(f'<img class="thumbnail" src= "{instance.image.url}" class="thumbnail"/>')
+        return ''
+    class Media:
+        css = {
+            'all': ['store/style.css']
+        }
+class VehicleRepairRequestVideoAdminInline(admin.TabularInline):
+    model = VehicleRepairRequestVideo
+    extra = 0
+    # readonly_fields = ['thumbnail']
+
+    # def thumbnail(self, instance):
+    #     if instance.image.name != '':
+            
+    #         return format_html(f'<img class="thumbnail" src= "{instance.image.url}" class="thumbnail"/>')
+    #     return ''
+    # class Media:
+    #     css = {
+    #         'all': ['store/style.css']
+    #     }
+
+
+
+@admin.register(VehicleRepairRequest)
+class VehicleRepairRequestAdmin(admin.ModelAdmin):
+    list_display = ['id', 'customer','preferred_mechanic', 'location_name', 'location_coordinates', 'description', 'created_at']
+    inlines = [VehicleRepairRequestImageAdminInline, VehicleRepairRequestVideoAdminInline]

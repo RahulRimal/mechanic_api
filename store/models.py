@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from django.db import models
 
@@ -183,3 +184,66 @@ class VehiclePart(models.Model):
     image = models.ImageField(
         upload_to='store/images/vehicle_part', null=False, blank=False)
     vehicle = models.ForeignKey(Vehicle,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.name.capitalize())
+
+
+
+class Review(models.Model):
+
+    RATING_1_STAR = 1
+    RATING_2_STARS = 2
+    RATING_3_STARS = 3
+    RATING_4_STARS = 4
+    RATING_5_STARS = 5
+
+
+    RATING_CHOICES = [
+        (RATING_1_STAR, '1 Star'),
+        (RATING_2_STARS, '2 Stars'),
+        (RATING_3_STARS, '3 Stars'),
+        (RATING_4_STARS, '4 Stars'),
+        (RATING_5_STARS, '5 Stars'),
+    ]
+
+    content = models.TextField()
+    rating = models.IntegerField(choices=RATING_CHOICES, default=RATING_1_STAR)
+    customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING)
+    mechanic = models.ForeignKey(Mechanic, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Review by {self.mechanic.username} for {self.customer.user.username}"
+
+
+class VehicleRepairRequest(models.Model):
+    location_name = models.CharField(max_length=255)
+    location_coordinates = models.CharField(max_length=255)
+    description = models.TextField()
+    preferred_mechanic = models.ForeignKey(Mechanic, null=True, blank=True, on_delete=models.SET_NULL)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True, blank=True)
+    vehicle_part = models.ForeignKey(VehiclePart,on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Vehicle Repair Request by {self.customer.user.username}"
+
+class VehicleRepairRequestImage(models.Model):
+    repair_request  = models.ForeignKey(VehicleRepairRequest, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='store/images/repair_request/images')
+
+    def __str__(self):
+        # return str(self.image)
+        return os.path.basename(str(self.image))
+
+class VehicleRepairRequestVideo(models.Model):
+    repair_request  = models.ForeignKey(VehicleRepairRequest, on_delete=models.CASCADE, related_name='videos')
+    video = models.FileField(upload_to='store/images/repair_request/videos')
+
+    def __str__(self):
+        return os.path.basename(str(self.video))
+        
