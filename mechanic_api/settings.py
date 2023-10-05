@@ -28,6 +28,7 @@ SECRET_KEY = 'django-insecure-a&#=bjbj=24y&^p7p3hj6$qi8m#a(&6(c+2u3$j^=-b)&_4o=5
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "localhost",
     "127.0.0.1",
     "127.0.0.2",
     "192.168.1.73",
@@ -55,11 +56,11 @@ INSTALLED_APPS = [
     'django_filters',
     'core',
     'store',
-    
+
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',    
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,7 +76,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # 'DIRS': [],
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Add this line to include the templates directory
+        # Add this line to include the templates directory
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -96,18 +98,21 @@ WSGI_APPLICATION = 'mechanic_api.wsgi.application'
 
 DATABASES = {
     # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'mechanic_api',
+        'HOST': 'localhost',
+        'USER': 'root',
+        'PASSWORD': 'root',
+    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'mechanic_api',
+    #     'HOST': 'db',
+    #     'PORT': '3306',
+    #     'USER': 'rootuser',
+    #     'PASSWORD': 'root',
     # }
-
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'mechanic_api',
-            'HOST': 'localhost',
-            'USER': 'root',
-            'PASSWORD': '',
-
-        }
 }
 
 
@@ -160,8 +165,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
 
 
-
-
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -176,7 +179,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # CORS_ALLOW_ALL_ORIGINS: True
-
 
 
 REST_FRAMEWORK = {
@@ -198,6 +200,7 @@ DJOSER = {
     },
 
     'SEND_ACTIVATION_SMS': True,
-    'ACTIVATION_SMS_TEMPLATE': 'activation_sms.txt',  # Customize the SMS template as per your needs
+    # Customize the SMS template as per your needs
+    'ACTIVATION_SMS_TEMPLATE': 'activation_sms.txt',
 
 }

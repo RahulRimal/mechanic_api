@@ -88,6 +88,7 @@ class User(AbstractUser):
     phone_number = models.CharField('phone number', unique=True, max_length=10)
     auth_provider = models.CharField(
         max_length=255, blank=False, null=False, default=AUTH_PROVIDERS.get('email'))
+    current_location = models.CharField
 
     objects = PhoneNumberUserManager()
 
